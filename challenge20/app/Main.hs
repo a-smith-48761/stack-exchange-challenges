@@ -11,7 +11,6 @@ import Data.List.Split             -- split lists on delimeters
 import Control.Arrow               -- used for easy-to-read function composition
 import qualified Data.Map as Map   -- maps
 import Data.Maybe (catMaybes)      -- function for flattening lists of Maybes
-import Data.Function ((&))         -- for reverse function application
 import Data.Ratio                  -- rational types, for calculations involving scoops and tubs
 
 -- use a specific type for support names and ice cream flavors to help detect errors
