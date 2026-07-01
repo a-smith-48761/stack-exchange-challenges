@@ -23,23 +23,6 @@ source-repository head
   type: git
   location: https://github.com/a-smith-48761/stack-exchange-challenges/challenge20
 
-library
-  exposed-modules:
-      Lib
-  other-modules:
-      Paths_challenge20
-  autogen-modules:
-      Paths_challenge20
-  hs-source-dirs:
-      src
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
-  build-depends:
-      base >=4.7 && <5
-    , containers >=0.8 && <1
-    , split >=0.2 && <1
-    , text >= 2.1 && <3
-  default-language: Haskell2010
-
 executable challenge20-exe
   main-is: Main.hs
   other-modules:
@@ -69,7 +52,6 @@ test-suite challenge20-test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , challenge20
     , containers >=0.8 && <1
     , split >=0.2 && <1
     , text >= 2.1 && <3

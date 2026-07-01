@@ -13,7 +13,6 @@ import qualified Data.Map as Map   -- maps
 import Data.Maybe (catMaybes)      -- function for flattening lists of Maybes
 import Data.Function ((&))         -- for reverse function application
 import Data.Ratio                  -- rational types, for calculations involving scoops and tubs
-import Lib                         -- local utility functions and types
 
 -- use a specific type for support names and ice cream flavors to help detect errors
 type Name = Text.Text
