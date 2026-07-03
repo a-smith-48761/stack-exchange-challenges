@@ -1,0 +1,57 @@
+cabal-version:      3.0
+name:               challenge19
+version:            0.1.0.0
+synopsis:           solution for stack overflow challenge #19
+license:            BSD-3-Clause
+license-file:       LICENSE
+author:             Andy Smith
+maintainer:         a.smith.48761@gmail.com
+build-type:         Simple
+extra-doc-files:    CHANGELOG.md
+
+common warnings
+    ghc-options: -Wall
+
+library
+    import:           warnings
+    exposed-modules:  Challenge19
+
+    build-depends:    
+        base ^>=4.20.2.0,
+        bytestring >= 0.12 && <1,
+        word8 >= 0.1 && <1,
+        containers >= 0.8 && <1
+
+    hs-source-dirs:   src
+    default-language: Haskell2010
+
+executable challenge19
+    import:           warnings
+    main-is:          Main.hs
+
+    build-depends:
+        base ^>=4.20.2.0,
+        containers >= 0.8 && <1,
+        bytestring >= 0.12 && <1,
+        word8 >= 0.1 && <1,
+        challenge19
+
+    hs-source-dirs:   app
+    default-language: Haskell2010
+
+test-suite challenge19-test
+    import:           warnings
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+
+    -- Test dependencies.
+    build-depends:
+        base ^>=4.20.2.0,
+        containers >= 0.8 && <1,
+        bytestring >= 0.12 && <1,
+        word8 >= 0.1 && <1,
+        tasty >= 1.5 && <2,
+        tasty-hunit >= 0.10 && <1,
+        challenge19
