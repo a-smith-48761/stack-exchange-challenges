@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings  #-}
+
 module Main (main) where
 
 import Challenge19
@@ -46,10 +48,32 @@ bytestringTests = testGroup "ByteString utilities"
 
     ]
 
+dictionaryReadingTests :: TestTree
+dictionaryReadingTests = testGroup "Reading dictionary items"
+    [
+        testCase "POS reading: nouns" $ do
+            toPOS "NoC" @?= Noun
+            toPOS "NoP" @?= Noun
+            toPOS "NoP-" @?= Noun,
+        testCase "POS reading: verbs" $ do
+            toPOS "Verb" @?= Verb
+            toPOS "VMod" @?= Verb,
+        testCase "POS reading: adjectives" $ do
+            toPOS "Adj" @?= Adj,
+        testCase "POS reading: others" $ do
+            toPOS "Any other string" @?= OtherPOS,
+
+        testCase "Reading dictionary lines works" $ do
+            stringToWords "  word1\t NoP 1234\nword2   Adj   515" @?=
+                [ WordData "word1" Noun 1234, WordData "word2" Adj 515 ]
+    ]
+
 tests :: TestTree
 tests = testGroup "Utility functions" 
     [
-        bytestringTests
+        bytestringTests,
+        dictionaryReadingTests
+    
     ]
 
 main :: IO ()
