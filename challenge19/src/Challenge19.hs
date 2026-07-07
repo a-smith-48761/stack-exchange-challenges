@@ -1,6 +1,8 @@
+{-# LANGUAGE OverloadedStrings  #-}
+
 module Challenge19 (
-    POS,
-    WordData,
+    POS, toPOS,
+    WordData, createWordData,
     wordAsString, wordPos, wordFreq,
     loadWords,
 
@@ -10,7 +12,9 @@ module Challenge19 (
 ) where
 
 import qualified Data.ByteString as BS
+import qualified Data.ByteString.Char8 as BSC
 import qualified Data.Word8 as W8
+import Data.Maybe (catMaybes)
 
 -- Part of Speech tags. We're only interested in certain classes, so we only define those.
 data POS = 
@@ -24,16 +28,31 @@ data WordData =
     WordData {
         wordAsString :: String,
         wordPos      :: POS,
-        wordFreq     :: Integer
+        wordFreq     :: Int
     }
     deriving (Show, Eq)
 
 
-loadWords :: IO [Word]
+toPOS :: BS.ByteString -> POS
+toPOS s 
+    | "No" `BS.isPrefixOf` s     = Noun
+    | s == "Verb" || s == "VMod" = Verb
+    | s == "Adj"                 = Adj
+    | otherwise                  = OtherPOS
+
+createWordData :: [BS.ByteString] -> Maybe WordData
+createWordData [w1, w2, w3] = makeResult <$> BSC.readInt w3    -- readInt returns a maybe, so we can use a map function to change the result if successful and ignore failure:
+                              where 
+                                makeResult (freq, _) = WordData (BSC.unpack w1) (toPOS w2) freq
+createWordData _            = Nothing
+
+loadWords :: IO [WordData]
 loadWords = do
-    headerFields:wordDefinitions <- (bsToListOfWordLists <$> BS.readFile "data/1_2_all_freq.txt")
-    putStrLn (show $ last wordDefinitions)
-    return []
+    _:wordDefinitions <- (   -- ignore first element (which is the file header) from:
+        filter (not . null) <$>  -- skip empty elements in
+         bsToListOfWordLists <$> -- list of word lists retrieved from
+          BS.readFile "data/1_2_all_freq.txt") -- our dictionary file
+    return $ catMaybes $ fmap createWordData wordDefinitions
 
 
 -- utility string handling functions, exported for easier testing:
