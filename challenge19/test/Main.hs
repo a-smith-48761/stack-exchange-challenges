@@ -81,9 +81,15 @@ treeBuildingTests = testGroup "Tree building"
         testCase "Frequency counts are zero for not-present letters" $
             IntMap.lookup (ord 'S') (buildFrequencyMap "abcdef") @?= Just 0,
         testCase "Frequency counts missing for non-letter characters" $
-            IntMap.lookup (ord '@') (buildFrequencyMap "@abc") @?= Nothing
+            IntMap.lookup (ord '@') (buildFrequencyMap "@abc") @?= Nothing,
         
-
+        testCase "Cannot use words we have insufficient letters for" $ do
+            wordIsPossible (buildFrequencyMap "abc") "bad" @?= False
+            wordIsPossible (buildFrequencyMap "ther") "there" @?= False,
+            
+        testCase "Can use words where we do have sufficient letters" $ do
+            wordIsPossible (buildFrequencyMap "hello") "hello" @?= True
+            wordIsPossible (buildFrequencyMap "antidisestablishmentarianism") "antiestablishment" @?= True
     ]
 
 tests :: TestTree

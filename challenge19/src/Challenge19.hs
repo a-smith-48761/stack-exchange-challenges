@@ -5,6 +5,7 @@ module Challenge19 (
     WordData(..), createWordData,
     loadWords,
     buildFrequencyMap,
+    wordIsPossible,
 
     -- utility functions are exported for testing, but not expected to be useful to the main program
     bsToListOfWordLists, bsSplitWords, bsSplitLines, bsRemoveCR, stringToWords
@@ -119,3 +120,18 @@ buildFrequencyMap = foldl' addLetterToMap emptyLetterMap
 
         keyForChar :: Char -> Int
         keyForChar c = Char.ord (Char.toUpper c)
+
+
+wordIsPossible :: IntMap Int -> String -> Bool
+wordIsPossible freqs string = frequenciesAreAtLeast (buildFrequencyMap string) freqs
+
+frequenciesAreAtLeast :: IntMap Int -> IntMap Int -> Bool
+frequenciesAreAtLeast mins = IntMap.foldrWithKey checkFreqAndAccumulate True
+    where
+        checkFreqAndAccumulate :: IntMap.Key -> Int -> Bool -> Bool
+        checkFreqAndAccumulate _ _ False = False  -- don't need to check anything if we've already failed
+        checkFreqAndAccumulate letter freq True = 
+            case IntMap.lookup letter mins of
+                Nothing -> False
+                Just minFreq -> freq >= minFreq
+
