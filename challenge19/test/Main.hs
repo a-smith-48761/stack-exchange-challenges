@@ -4,6 +4,9 @@ module Main (main) where
 
 import Challenge19
 import Data.String
+import Data.IntMap.Strict (IntMap)             -- IntMap (used for storing available character counts)
+import qualified Data.IntMap.Strict as IntMap
+import Data.Char(ord)
 
 import Test.Tasty
 import Test.Tasty.HUnit 
@@ -68,11 +71,27 @@ dictionaryReadingTests = testGroup "Reading dictionary items"
                 [ WordData "word1" Noun 1234, WordData "word2" Adj 515 ]
     ]
 
+treeBuildingTests :: TestTree
+treeBuildingTests = testGroup "Tree building"
+    [
+        testCase "Frequency counting works" $ 
+            let freqCounts = buildFrequencyMap "The quick brown fox juMPED over the LAZY DOGS" in do
+                IntMap.lookup (ord 'E') freqCounts @?= Just 4
+                IntMap.lookup (ord 'F') freqCounts @?= Just 1,
+        testCase "Frequency counts are zero for not-present letters" $
+            IntMap.lookup (ord 'S') (buildFrequencyMap "abcdef") @?= Just 0,
+        testCase "Frequency counts missing for non-letter characters" $
+            IntMap.lookup (ord '@') (buildFrequencyMap "@abc") @?= Nothing
+        
+
+    ]
+
 tests :: TestTree
 tests = testGroup "Utility functions" 
     [
         bytestringTests,
-        dictionaryReadingTests
+        dictionaryReadingTests,
+        treeBuildingTests
     
     ]
 
