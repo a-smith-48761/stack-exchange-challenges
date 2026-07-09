@@ -4,8 +4,10 @@ module Challenge19 (
     POS(..), toPOS, 
     WordData(..), createWordData,
     loadWords,
+    WordTree(..),
     buildFrequencyMap,
     wordIsPossible,
+    buildWordTree,
 
     -- utility functions are exported for testing, but not expected to be useful to the main program
     bsToListOfWordLists, bsSplitWords, bsSplitLines, bsRemoveCR, stringToWords
@@ -19,7 +21,9 @@ import Control.Arrow ((>>>))                   -- we use Arrows only for left-to
 import Data.IntMap.Strict (IntMap)             -- IntMap (used for storing available character counts)
 import qualified Data.IntMap.Strict as IntMap
 import qualified Data.Char as Char
-
+import Data.Set (Set)
+import qualified Data.Set as Set
+import Data.Function                            --  function combinators, e.g. fix
 
 -- ---------------------------------------------------------------------------
 --         Data structures and functions for handling dictionary data
@@ -99,7 +103,6 @@ bsSplitWords = filter (not . BS.null) . BS.splitWith W8.isSpace
 
 data WordTree =
     WordTree {
-        wtParent           :: Maybe (WordTree, WordData),  -- parent node and word used to reach this node, Nothing for the root node.
         wtSumLogFreq       :: Float,                       -- sum of the log frequencies to get here (which is proportional to log 
                                                            -- probability of this phrase occurring naturally given uniform distribution)
         wtDepth            :: Int,                         -- depth of this node
@@ -134,4 +137,34 @@ frequenciesAreAtLeast mins = IntMap.foldrWithKey checkFreqAndAccumulate True
             case IntMap.lookup letter mins of
                 Nothing -> False
                 Just minFreq -> freq >= minFreq
+
+subtractFrequencies :: IntMap Int -> IntMap Int -> IntMap Int
+subtractFrequencies = IntMap.differenceWith (\ a b -> Just $ a-b) 
+
+buildWordTree :: IntMap Int -> [WordData] -> Set String -> WordTree
+buildWordTree freqs dict ignore = fix buildRoot -- fix is used here to enable passing the parent node to the function that builds the children
+    where
+        -- because we're using "fix" to call this, the parameter "root" is given a value which is a reference to the object that will contain the result of
+        -- evaluating the function call once that is done, i.e. the parameter is also the return value of the function. Because the value is evaluated lazily
+        -- (i.e. only once it is actually used) this is not self-contradictory.
+        buildRoot root = WordTree 0.0 0 freqs (completionsFrom root freqs)
+
+        -- build a list of completions from a given node by running through the dictionary and skipping items that don't have enough letters
+        completionsFrom node remainingFreqs = catMaybes         -- removes "Nothing" from list, converts "Just x" to "x", i.e. this is what skips the failures
+            $ fmap (buildCompletion node remainingFreqs) dict   -- builds either Nothing or Just (word, newnode)
+
+        buildCompletion node remainingFreqs word 
+            | wordIsPossible remainingFreqs $ wordAsString word    = Just (word, fix $ newNodeFrom node word remainingFreqs)
+            | otherwise                                            = Nothing
+        
+        -- recursively build a new node starting from a given parent with the specified word; we use 'fix' to get the new node
+        -- passed back to us so we can use it in recursive calls:
+        newNodeFrom parent word frequenciesBeforeWord newNode = 
+            let 
+                newFrequencies = subtractFrequencies frequenciesBeforeWord (buildFrequencyMap $ wordAsString word) 
+            in WordTree 
+                (wtSumLogFreq parent + logBase 10 (fromIntegral $ wordFreq word))
+                (wtDepth parent + 1)
+                newFrequencies
+                (completionsFrom newNode newFrequencies)
 

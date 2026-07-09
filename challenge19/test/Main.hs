@@ -7,6 +7,8 @@ import Data.String
 import Data.IntMap.Strict (IntMap)             -- IntMap (used for storing available character counts)
 import qualified Data.IntMap.Strict as IntMap
 import Data.Char(ord)
+import Data.Set (Set)
+import qualified Data.Set as Set
 
 import Test.Tasty
 import Test.Tasty.HUnit 
@@ -89,7 +91,63 @@ treeBuildingTests = testGroup "Tree building"
             
         testCase "Can use words where we do have sufficient letters" $ do
             wordIsPossible (buildFrequencyMap "hello") "hello" @?= True
-            wordIsPossible (buildFrequencyMap "antidisestablishmentarianism") "antiestablishment" @?= True
+            wordIsPossible (buildFrequencyMap "antidisestablishmentarianism") "antiestablishment" @?= True,
+
+        testCase "Root of tree is correctly filled in" $ do
+            let root = buildWordTree 
+                        (buildFrequencyMap "lorem ipsum dolor sit amet consectetuer adipiscing elit")           -- available letters
+                        (stringToWords "azeotrope NoC 141\n capsicum NoC 121 \n tame Verb 113\n elite Adj 100") -- dictionary
+                        (Set.empty)                                                                             -- words that must be avoided
+
+            wtSumLogFreq root @?= 0.0
+            wtDepth root @?= 0
+            wtAvailableLetters root @?= buildFrequencyMap "lorem ipsum dolor sit amet consectetuer adipiscing elit",
+
+        testCase "First level of tree is correctly filled in" $ do
+            let root = buildWordTree 
+                        (buildFrequencyMap "lorem ipsum dolor sit amet consectetuer adipiscing elit")           -- available letters
+                        (stringToWords "azeotrope NoC 141\n capsicum NoC 121 \n tame Verb 113\n elite Adj 100") -- dictionary
+                        (Set.empty)                                                                             -- words that must be avoided
+
+            -- break 3 expected items from completions list, but we won't check the new nodes for the second and third, just the words used to get there
+            -- note only expecting 3 items because "azeotrope" isn't possible from our starting frequencies
+            let (w1, n1):(w2, _):(w3, _):t = wtCompletions root 
+
+            t @?= []  -- check length is correct
+
+            -- check word and new node for the first entry
+            wordAsString w1 @?= "capsicum"
+            wtSumLogFreq n1 @?= logBase 10 121
+            wtDepth n1 @?= 1
+            wtAvailableLetters n1 @?=  buildFrequencyMap "lorem dolor sit met onsectetuer adipising elit"
+
+            -- check remaining words
+            wordAsString w2 @?= "tame"
+            wordAsString w3 @?= "elite",
+
+        testCase "Second level of tree is correctly filled in" $ do
+            let root = buildWordTree 
+                        (buildFrequencyMap "lorem ipsum dolor sit amet consectetuer adipiscing elit")           -- available letters
+                        (stringToWords "azeotrope NoC 141\n capsicum NoC 121 \n tame Verb 113\n elite Adj 100") -- dictionary
+                        (Set.empty)                                                                             -- words that must be avoided
+
+            let (_, firstLevel):_ = wtCompletions root -- get the first completion from the root, which should be "capsicum"
+            -- because there's only one 'c' left, we now can't have capsicum a second time, but tame and elite are both still possible:
+            let (w1, n1):(w2, _):t = wtCompletions firstLevel
+
+            t @?= []  -- check length is correct
+
+            -- check word and new node for the first entry
+            wordAsString w1 @?= "tame"
+            wtSumLogFreq n1 @?= (logBase 10 121) + (logBase 10 113)
+            wtDepth n1 @?= 2
+            wtAvailableLetters n1 @?=  buildFrequencyMap "lorem dolor sit onsectetuer dipising elit"
+
+            -- check remaining words
+            wordAsString w2 @?= "elite"
+
+
+
     ]
 
 tests :: TestTree
