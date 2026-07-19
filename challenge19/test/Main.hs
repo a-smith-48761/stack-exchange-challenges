@@ -99,7 +99,7 @@ treeBuildingTests = testGroup "Tree building"
                         (stringToWords "azeotrope NoC 141\n capsicum NoC 121 \n tame Verb 113\n elite Adj 100") -- dictionary
                         (Set.empty)                                                                             -- words that must be avoided
 
-            wtSumLogFreq root @?= 0.0
+            wtSumLogProb root @?= 0.0
             wtDepth root @?= 0
             wtAvailableLetters root @?= buildFrequencyMap "lorem ipsum dolor sit amet consectetuer adipiscing elit",
 
@@ -117,7 +117,7 @@ treeBuildingTests = testGroup "Tree building"
 
             -- check word and new node for the first entry
             wordAsString w1 @?= "capsicum"
-            wtSumLogFreq n1 @?= logBase 10 121
+            wtSumLogProb n1 @?= logBase 10 121 - 6
             wtDepth n1 @?= 1
             wtAvailableLetters n1 @?=  buildFrequencyMap "lorem dolor sit met onsectetuer adipising elit"
 
@@ -139,7 +139,7 @@ treeBuildingTests = testGroup "Tree building"
 
             -- check word and new node for the first entry
             wordAsString w1 @?= "tame"
-            wtSumLogFreq n1 @?= (logBase 10 121) + (logBase 10 113)
+            wtSumLogProb n1 @?= (logBase 10 121) + (logBase 10 113) - 12
             wtDepth n1 @?= 2
             wtAvailableLetters n1 @?=  buildFrequencyMap "lorem dolor sit onsectetuer dipising elit"
 

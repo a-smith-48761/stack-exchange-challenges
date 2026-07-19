@@ -77,6 +77,9 @@ loadWords = do
 
     return wordDefinitions 
 
+-- the log base 10 of the total number of words used for the relative word frequencies
+logWordFreqTotal :: Float     -- can use this to convert reported frequencies into probabilities
+logWordFreqTotal = 6.0        -- i.e. the reported figures are per million words
 
 -- utility string handling functions, exported for easier testing:
 
@@ -103,7 +106,7 @@ bsSplitWords = filter (not . BS.null) . BS.splitWith W8.isSpace
 
 data WordTree =
     WordTree {
-        wtSumLogFreq       :: Float,                       -- sum of the log frequencies to get here (which is proportional to log 
+        wtSumLogProb       :: Float,                       -- sum of the log probabilities to get here (which is proportional to log 
                                                            -- probability of this phrase occurring naturally given uniform distribution)
         wtDepth            :: Int,                         -- depth of this node
         wtAvailableLetters :: IntMap Int,                  -- uses upper case ASCII codes as keys, i.e. 65-92
@@ -163,7 +166,7 @@ buildWordTree freqs dict ignore = fix buildRoot -- fix is used here to enable pa
             let 
                 newFrequencies = subtractFrequencies frequenciesBeforeWord (buildFrequencyMap $ wordAsString word) 
             in WordTree 
-                (wtSumLogFreq parent + logBase 10 (fromIntegral $ wordFreq word))
+                (wtSumLogProb parent + logBase 10 (fromIntegral $ wordFreq word) - logWordFreqTotal)
                 (wtDepth parent + 1)
                 newFrequencies
                 (completionsFrom newNode newFrequencies)
