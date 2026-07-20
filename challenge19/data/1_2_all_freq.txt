@@ -336,7 +336,7 @@
 	law	NoC	270
 	best	Adj	266
 	form	NoC	266
-	A / a	Lett	266
+	A	Lett	266
 	looking	Verb	264
 	early	Adj	264
 	making	Verb	264
@@ -556,7 +556,7 @@
 	because of	Prep	178
 	simply	Adv	177
 	especially	Adv	177
-	B / b	Lett	177			
+	B	Lett	177			
 	department	NoC	177
 	single	Adj	177
 	short	Adj	177
@@ -722,7 +722,7 @@
 	for	Conj	139
 	happened	Verb	139
 	added	Verb	139
-	C / c	Lett	138
+	C	Lett	138
 	manager	NoC	138
 	computer	NoC	138
 	security	NoC	138
@@ -1242,7 +1242,7 @@
 	killed	Verb	86
 	love	Verb	86
 	mum	NoC	86
-	I / i	Num	86		
+	I	Num	86		
 	context	NoC	86
 	fifty	Num	86
 	primary	Adj	86
@@ -1347,7 +1347,7 @@
 	achieved	Verb	79
 	slowly	Adv	79
 	relatively	Adv	79
-	P / p	Lett	79		
+	P	Lett	79		
 	shares	NoC	79
 	letters	NoC	79
 	finished	Verb	79
@@ -1471,7 +1471,7 @@
 	somebody	Pron	73
 	pain	NoC	73
 	gas	NoC	73
-	S / s	Lett	73
+	S	Lett	73
 	clothes	NoC	73
 	smaller	Adj	73
 	as to	Prep	73
@@ -1502,7 +1502,7 @@
 	rise	NoC	72
 	strength	NoC	72
 	crime	NoC	72
-	D / d	Lett	71
+	D	Lett	71
 	hard	Adv	71
 	wind	NoC	71
 	Mary	NoP	71
@@ -1603,7 +1603,7 @@
 	fairly	Adv	67
 	football	NoC	67
 	watched	Verb	67
-	E / e	Lett	67
+	E	Lett	67
 	telephone	NoC	67
 	steps	NoC	67
 	decide	Verb	67
@@ -1798,7 +1798,7 @@
 	democratic	Adj	59
 	elections	NoC	59
 	entered	Verb	59
-	X / x	Lett	59
+	X	Lett	59
 	courts	NoC	59
 	growing	Adj	59
 	goal	NoC	59
@@ -1814,7 +1814,7 @@
 	correct	Adj	59
 	even though	Conj	59
 	removed	Verb	59
-	T / t	Lett	59
+	T	Lett	59
 	prince	NoC	59
 	theatre	NoC	59
 	Irish	Adj	59
@@ -2019,7 +2019,7 @@
 	drugs	NoC	53
 	die	Verb	53
 	feelings	NoC	53
-	I / i	Lett	53
+	I	Lett	53
 	22	Num	53
 	outside	Adv	53
 	Ian	NoP	53
@@ -2034,7 +2034,7 @@
 	sought	Verb	53
 	apparent	Adj	53
 	branch	NoC	53
-	R / r	Lett	53
+	R	Lett	53
 	beginning	Verb	53
 	noticed	Verb	53
 	procedures	NoC	53
@@ -2130,7 +2130,7 @@
 	demands	NoC	51
 	pushed	Verb	50
 	visit	Verb	50
-	V / v	Lett	50
+	V	Lett	50
 	etc	Adv	50
 	planning	Verb	50
 	farmers	NoC	50
@@ -2287,7 +2287,7 @@
 	rather than	Conj	46
 	somewhat	Adv	46
 	in relation to	Prep	46
-	M / m	Lett	46
+	M	Lett	46
 	sections	NoC	46
 	stared	Verb	46
 	seeking	Verb	46
@@ -2343,7 +2343,7 @@
 	tall	Adj	46
 	hole	NoC	46
 	living	NoC	46
-	H / h	Lett	45
+	H	Lett	45
 	adult	NoC	45
 	iron	NoC	45
 	amongst	Prep	45
@@ -2354,7 +2354,7 @@
 	index	NoC	45
 	permanent	Adj	45
 	beat	Verb	45
-	O / o	Lett	45
+	O	Lett	45
 	as soon as	Conj	45
 	trip	NoC	45
 	contain	Verb	45
@@ -2492,7 +2492,7 @@
 	grown	Verb	43
 	crowd	NoC	43
 	recognised	Verb	43
-	N / n	Lett	43
+	N	Lett	43
 	interview	NoC	43
 	broken	Verb	43
 	Simon	NoP	43
@@ -2614,7 +2614,7 @@
 	agricultural	Adj	41
 	artist	NoC	41
 	plastic	NoC	41
-	G / g	Lett	40
+	G	Lett	40
 	artists	NoC	40
 	gently	Adv	40
 	Bob	NoP	40
@@ -2657,7 +2657,7 @@
 	expert	NoC	40
 	formation	NoC	40
 	comfortable	Adj	40
-	Co / CO	NoC	40			
+	Co	NoC	40			
 	border	NoC	40
 	constitution	NoC	40
 	weapons	NoC	40
@@ -2743,7 +2743,7 @@
 	duties	NoC	39
 	friendly	Adj	39
 	arguments	NoC	38
-	F / f	Lett	38
+	F	Lett	38
 	accused	Verb	38
 	driving	Verb	38
 	losses	NoC	38
@@ -3301,7 +3301,7 @@
 	prize	NoC	31
 	drop	Verb	31
 	constitutional	Adj	31
-	L / l	Lett	31
+	L	Lett	31
 	perspective	NoC	31
 	Neil	NoP	31
 	satisfied	Adj	31
@@ -3433,7 +3433,7 @@
 	conduct	NoC	29
 	objective	NoC	29
 	report	Verb	29
-	Y / y	Lett	29
+	Y	Lett	29
 	ring	Verb	29
 	hospitals	NoC	29
 	mechanism	NoC	29
@@ -3885,7 +3885,7 @@
 	authors	NoC	25
 	wondering	Verb	25
 	judgement	NoC	25
-	K / k	Lett	25
+	K	Lett	25
 	experience	Verb	25
 	Victorian	Adj	25
 	egg	NoC	25
@@ -4450,7 +4450,7 @@
 	alarm	NoC	21
 	go	NoC	21
 	Poland	NoP	21
-	U / u	Lett	21
+	U	Lett	21
 	gene	NoC	21
 	daughters	NoC	21
 	sheer	Adj	21
@@ -5080,7 +5080,7 @@
 	separately	Adv	18
 	opinions	NoC	18
 	enquiry	NoC	18
-	Q / q	Lett	18
+	Q	Lett	18
 	grinned	Verb	18
 	lover	NoC	18
 	slept	Verb	18
@@ -5352,7 +5352,7 @@
 	near	Adv	16
 	fortunately	Adv	16
 	W.	NoP	16		
-	W / w	Lett	16
+	W	Lett	16
 	hostile	Adj	16
 	advisory	Adj	16
 	cook	Verb	16
@@ -5841,7 +5841,7 @@
 	Emma	NoP	15
 	appeals	NoC	15
 	Israeli	Adj	15
-	J / j	Lett	15
+	J	Lett	15
 	mobility	NoC	15
 	reviewed	Verb	15
 	buses	NoC	15
@@ -6030,7 +6030,7 @@
 	lounge	NoC	14
 	raises	Verb	14
 	Cheltenham	NoP	14
-	£1	NoC	14
+	ï¿½1	NoC	14
 	workshops	NoC	14
 	refusing	Verb	14
 	shallow	Adj	14
@@ -6541,7 +6541,7 @@
 	invested	Verb	13
 	mathematical	Adj	13
 	proteins	NoC	13
-	£100	NoC	13
+	ï¿½100	NoC	13
 	39	Num	13
 	sanctions	NoC	13
 	aggression	NoC	13
@@ -7172,7 +7172,7 @@
 	hunger	NoC	11
 	cabin	NoC	11
 	photographer	NoC	11
-	£10	NoC	11
+	ï¿½10	NoC	11
 	stay	NoC	11
 	preservation	NoC	11
 	calendar	NoC	11
@@ -7223,7 +7223,7 @@
 	injured	Adj	11
 	mask	NoC	11
 	provided that	Conj	11
-	Z / z	Lett	11
+	Z	Lett	11
 	Trent	NoP	11
 	ease	Verb	11
 	draws	Verb	11
@@ -7701,7 +7701,7 @@
 	18th	Ord	10
 	Gaulle	NoP	10
 	unusually	Adv	10
-	£1,000	NoC	10
+	ï¿½1,000	NoC	10
 	phases	NoC	10
 	adapt	Verb	10
 	colitis	NoC	10

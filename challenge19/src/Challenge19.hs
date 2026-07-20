@@ -171,3 +171,23 @@ buildWordTree freqs dict ignore = fix buildRoot -- fix is used here to enable pa
                 newFrequencies
                 (completionsFrom newNode newFrequencies)
 
+-- ---------------------------------------------------------------------------
+--      Functions for searching the tree for appropriate solutions
+-- ---------------------------------------------------------------------------
+
+-- Heuristic for estimating the cost of finishing the tree from a given frequency set.
+-- This is used to guide the search, and it is better if it overestimates rather than underestimates
+-- the cost, i.e. produces a lower total probability.
+-- To do this, we assign each letter a probability of use by assuming it will be used by a word
+-- n/26 through the dictionary when sorted in frequency order, where n is the letter's position
+-- in the frequency distribution of letter use for English text. i.e. for 'e', n = 1, so we go
+-- 1/26 through the dictionary and find that we should look at the 297'th word, which is "both" 
+-- with a frequency of 310*10^-6.  The canonical order of letters we use is "ETAOIN SHRDLU
+-- CUMWFG YPBVK JXQZ". Position increments by 297.192 each time.
+-- This data is precalculated using the following commands in ghci:
+--   let d = lines <$> readFile "data/1_2_all_freq.txt"
+--   let linenos = [ round $ (x * 297192)/1000 | x <- [1..26] ]
+--   let selection = d >>= \ l -> return [ l !! (x-1) | x <- linenos ]
+--   selection >>= return . zip "ETAOINSHRDLUCUMWFGYPBVKJXQZ" . fmap (read::String -> Int) . fmap (dropWhile (not . isDigit))
+
+letterFrequencies = [('E',310),('T',167),('A',115),('O',89),('I',72),('N',60),('S',52),('H',45),('R',40),('D',35),('L',31),('U',28),('C',25),('U',23),('M',21),('W',19),('F',18),('G',16),('Y',15),('P',14),('B',13),('V',13),('K',12),('J',11),('X',11),('Q',10)]
