@@ -116,10 +116,10 @@ data WordTree =
     deriving (Eq, Show)
 
 buildFrequencyMap :: String -> IntMap Int
-buildFrequencyMap = foldl' addLetterToMap emptyLetterMap 
+buildFrequencyMap = foldr addLetterToMap emptyLetterMap 
     where
-        addLetterToMap :: IntMap Int -> Char -> IntMap Int
-        addLetterToMap cur c = IntMap.adjust (+1) (keyForChar c) cur -- does nothing if the key isn't in the map, which is fine as we're preinitializing.
+        addLetterToMap :: Char -> IntMap Int -> IntMap Int
+        addLetterToMap c cur = IntMap.adjust (+1) (keyForChar c) cur -- does nothing if the key isn't in the map, which is fine as we're preinitializing.
         
         emptyLetterMap :: IntMap Int
         emptyLetterMap = IntMap.fromList [(keyForChar c, 0) | c <- ['A' .. 'Z']]

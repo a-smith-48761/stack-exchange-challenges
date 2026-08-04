@@ -17,7 +17,7 @@ library
     exposed-modules:  Challenge19
 
     build-depends:    
-        base ^>=4.20.2.0,
+        base ^>=4.17.0.0,
         bytestring >= 0.12 && <1,
         word8 >= 0.1 && <1,
         containers >= 0.8 && <1
@@ -30,7 +30,7 @@ executable challenge19
     main-is:          Main.hs
 
     build-depends:
-        base ^>=4.20.2.0,
+        base ^>=4.17.0.0,
         containers >= 0.8 && <1,
         bytestring >= 0.12 && <1,
         word8 >= 0.1 && <1,
@@ -48,7 +48,7 @@ test-suite challenge19-test
 
     -- Test dependencies.
     build-depends:
-        base ^>=4.20.2.0,
+        base ^>=4.17.0.0,
         containers >= 0.8 && <1,
         bytestring >= 0.12 && <1,
         word8 >= 0.1 && <1,
