@@ -8,6 +8,7 @@ module Challenge19 (
     buildFrequencyMap,
     wordIsPossible,
     buildWordTree,
+    heuristicProbability, 
 
     -- utility functions are exported for testing, but not expected to be useful to the main program
     bsToListOfWordLists, bsSplitWords, bsSplitLines, bsRemoveCR, stringToWords
@@ -144,6 +145,9 @@ frequenciesAreAtLeast mins = IntMap.foldrWithKey checkFreqAndAccumulate True
 subtractFrequencies :: IntMap Int -> IntMap Int -> IntMap Int
 subtractFrequencies = IntMap.differenceWith (\ a b -> Just $ a-b) 
 
+freqToLogProb :: Int -> Float
+freqToLogProb freq = logBase 10 (fromIntegral freq) - logWordFreqTotal
+
 buildWordTree :: IntMap Int -> [WordData] -> Set String -> WordTree
 buildWordTree freqs dict ignore = fix buildRoot -- fix is used here to enable passing the parent node to the function that builds the children
     where
@@ -166,7 +170,7 @@ buildWordTree freqs dict ignore = fix buildRoot -- fix is used here to enable pa
             let 
                 newFrequencies = subtractFrequencies frequenciesBeforeWord (buildFrequencyMap $ wordAsString word) 
             in WordTree 
-                (wtSumLogProb parent + logBase 10 (fromIntegral $ wordFreq word) - logWordFreqTotal)
+                (wtSumLogProb parent + freqToLogProb (wordFreq word))
                 (wtDepth parent + 1)
                 newFrequencies
                 (completionsFrom newNode newFrequencies)
@@ -183,11 +187,24 @@ buildWordTree freqs dict ignore = fix buildRoot -- fix is used here to enable pa
 -- in the frequency distribution of letter use for English text. i.e. for 'e', n = 1, so we go
 -- 1/26 through the dictionary and find that we should look at the 297'th word, which is "both" 
 -- with a frequency of 310*10^-6.  The canonical order of letters we use is "ETAOIN SHRDLU
--- CUMWFG YPBVK JXQZ". Position increments by 297.192 each time.
+-- CMWFG YPBVK JXQZ". Position increments by 297.192 each time.
 -- This data is precalculated using the following commands in ghci:
 --   let d = lines <$> readFile "data/1_2_all_freq.txt"
 --   let linenos = [ round $ (x * 297192)/1000 | x <- [1..26] ]
 --   let selection = d >>= \ l -> return [ l !! (x-1) | x <- linenos ]
---   selection >>= return . zip "ETAOINSHRDLUCUMWFGYPBVKJXQZ" . fmap (read::String -> Int) . fmap (dropWhile (not . isDigit))
+--   selection >>= return . zip "ETAOINSHRDLUCMWFGYPBVKJXQZ" . fmap (read::String -> Int) . fmap (dropWhile (not . isDigit))
 
-letterFrequencies = [('E',310),('T',167),('A',115),('O',89),('I',72),('N',60),('S',52),('H',45),('R',40),('D',35),('L',31),('U',28),('C',25),('U',23),('M',21),('W',19),('F',18),('G',16),('Y',15),('P',14),('B',13),('V',13),('K',12),('J',11),('X',11),('Q',10)]
+letterFrequencies :: [(Char, Int)]
+letterFrequencies = [('E',310),('T',167),('A',115),('O',89),('I',72),('N',60),('S',52),('H',45),('R',40),('D',35),('L',31),('U',28),('C',25),('M',23),('W',21),('F',19),('G',18),('Y',16),('P',15),('B',14),('V',13),('K',13),('J',12),('X',11),('Q',11),('Z',10)]
+
+letterLogProbs :: IntMap Float -- keys are ascii values of upper case chars
+letterLogProbs = IntMap.fromList [(Char.ord k, freqToLogProb freq) | (k, freq) <- letterFrequencies]
+
+-- letter to log prob, which accepts an ASCII code for a letter and gives log prob
+letterToLogProb :: Int -> Float
+letterToLogProb letter = IntMap.findWithDefault 0.0 letter letterLogProbs
+
+heuristicProbability :: IntMap Int -> Float
+heuristicProbability = IntMap.foldrWithKey accumulateLogProb 0.0 
+    where
+        accumulateLogProb letter count acc = acc + (letterToLogProb letter) * (fromIntegral count)

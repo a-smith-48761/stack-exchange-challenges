@@ -150,12 +150,30 @@ treeBuildingTests = testGroup "Tree building"
 
     ]
 
+heuristicTests :: TestTree
+heuristicTests = testGroup "Heuristic function"
+    [
+        testCase "heuristic function is less than zero" $ do
+            heuristicProbability (buildFrequencyMap "this is only a test")  < 0 @? "log probs should be < 0"
+            heuristicProbability (buildFrequencyMap "woe, woe, and thrice woe")  < 0 @? "log probs should be < 0"
+            heuristicProbability (buildFrequencyMap "jackdaws just love my big sphinx of quartz")  < 0 @? "log probs should be < 0",
+        testCase "heuristic is lower for rarer combinations" $ do
+            heuristicProbability (buildFrequencyMap "uzzuprycatumbryk") < heuristicProbability (buildFrequencyMap "eatonricateshrac")
+                @? "uzzuprycatumbryk should be lower than eatonricateshrac"
+            heuristicProbability (buildFrequencyMap "zzz") < heuristicProbability (buildFrequencyMap "eat")
+                @? "zzz should be lower than eat",
+        testCase "heuristic is lower for longer combinations" $ do
+            heuristicProbability (buildFrequencyMap "zzz") < heuristicProbability (buildFrequencyMap "zz")
+                @? "zzz should be lower than zz"
+
+    ]
 tests :: TestTree
 tests = testGroup "Utility functions" 
     [
         bytestringTests,
         dictionaryReadingTests,
-        treeBuildingTests
+        treeBuildingTests,
+        heuristicTests
     
     ]
 
