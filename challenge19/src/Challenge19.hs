@@ -8,9 +8,10 @@ module Challenge19 (
     buildFrequencyMap,
     wordIsPossible,
     buildWordTree,
-    heuristicProbability, 
+    calculateSkipSet,
 
     -- utility functions are exported for testing, but not expected to be useful to the main program
+    heuristicProbability, 
     bsToListOfWordLists, bsSplitWords, bsSplitLines, bsRemoveCR, stringToWords
 ) where
 
@@ -174,6 +175,17 @@ buildWordTree freqs dict ignore = fix buildRoot -- fix is used here to enable pa
                 (wtDepth parent + 1)
                 newFrequencies
                 (completionsFrom newNode newFrequencies)
+
+-- ---------------------------------------------------------------------------
+--    Function for identifying words that should not be used in the output
+-- ---------------------------------------------------------------------------
+calculateSkipSet :: String -> Set String
+calculateSkipSet sentence = Set.fromList $ filter acceptableWord $ fmap preprocessWord $ words sentence
+    where
+        acceptableWord w = length w > 3
+        preprocessWord = removePunctuation . convertCase
+        removePunctuation = filter Char.isLetter
+        convertCase = fmap Char.toLower
 
 -- ---------------------------------------------------------------------------
 --      Functions for searching the tree for appropriate solutions

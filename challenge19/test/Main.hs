@@ -167,13 +167,33 @@ heuristicTests = testGroup "Heuristic function"
                 @? "zzz should be lower than zz"
 
     ]
+
+skipSetTests :: TestTree
+skipSetTests = testGroup "Skip sets"
+    [
+        testCase "skip set for an empty string is empty" $ do
+            calculateSkipSet "" @?= Set.empty,
+        testCase "skip set for a 1-word sentence contains that word" $ do
+            calculateSkipSet "message" @?= Set.fromList ["message"],
+        testCase "skip set should allow multiple words" $ do
+            calculateSkipSet "final message" @?= Set.fromList ["final", "message"],
+        testCase "skip set should not include punctuation" $ do
+            calculateSkipSet "message." @?= Set.fromList ["message"],
+        testCase "skip set should be lower case" $ do
+            calculateSkipSet "Final MESSAGE" @?= Set.fromList ["final", "message"],
+        testCase "skip set doesn't include short words" $ do
+            calculateSkipSet "The final message of the man was: huh?" @?= Set.fromList ["final", "message"]
+
+    ]
+
 tests :: TestTree
 tests = testGroup "Utility functions" 
     [
         bytestringTests,
         dictionaryReadingTests,
         treeBuildingTests,
-        heuristicTests
+        heuristicTests,
+        skipSetTests
     
     ]
 
