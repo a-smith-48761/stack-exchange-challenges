@@ -144,9 +144,29 @@ treeBuildingTests = testGroup "Tree building"
             wtAvailableLetters n1 @?=  buildFrequencyMap "lorem dolor sit onsectetuer dipising elit"
 
             -- check remaining words
+            wordAsString w2 @?= "elite",
+
+        testCase "First level of tree ignores words in skip set" $ do
+            let root = buildWordTree 
+                        (buildFrequencyMap "lorem ipsum dolor sit amet consectetuer adipiscing elit")           -- available letters
+                        (stringToWords "azeotrope NoC 141\n capsicum NoC 121 \n tame Verb 113\n elite Adj 100") -- dictionary
+                        (Set.fromList ["tame"])                                                                 -- words that must be avoided
+
+            -- break 2 expected items from completions list, but we won't check the new nodes for the second and third, just the words used to get there
+            -- note only expecting 2 items because "azeotrope" isn't possible from our starting frequencies and
+            -- we're supposed to be skipping "tame"
+            let (w1, n1):(w2, _):t = wtCompletions root 
+
+            t @?= []  -- check length is correct
+
+            -- check word and new node for the first entry
+            wordAsString w1 @?= "capsicum"
+            wtSumLogProb n1 @?= logBase 10 121 - 6
+            wtDepth n1 @?= 1
+            wtAvailableLetters n1 @?=  buildFrequencyMap "lorem dolor sit met onsectetuer adipising elit"
+
+            -- check remaining words
             wordAsString w2 @?= "elite"
-
-
 
     ]
 

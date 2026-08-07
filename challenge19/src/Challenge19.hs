@@ -150,31 +150,34 @@ freqToLogProb :: Int -> Float
 freqToLogProb freq = logBase 10 (fromIntegral freq) - logWordFreqTotal
 
 buildWordTree :: IntMap Int -> [WordData] -> Set String -> WordTree
-buildWordTree freqs dict ignore = fix buildRoot -- fix is used here to enable passing the parent node to the function that builds the children
+buildWordTree freqs dict rootSkip = fix buildRoot -- fix is used here to enable passing the parent node to the function that builds the children
     where
         -- because we're using "fix" to call this, the parameter "root" is given a value which is a reference to the object that will contain the result of
         -- evaluating the function call once that is done, i.e. the parameter is also the return value of the function. Because the value is evaluated lazily
         -- (i.e. only once it is actually used) this is not self-contradictory.
-        buildRoot root = WordTree 0.0 0 freqs (completionsFrom root freqs)
+        buildRoot root = WordTree 0.0 0 freqs (completionsFrom root freqs rootSkip)
 
         -- build a list of completions from a given node by running through the dictionary and skipping items that don't have enough letters
-        completionsFrom node remainingFreqs = catMaybes         -- removes "Nothing" from list, converts "Just x" to "x", i.e. this is what skips the failures
-            $ fmap (buildCompletion node remainingFreqs) dict   -- builds either Nothing or Just (word, newnode)
+        completionsFrom node remainingFreqs skip = catMaybes       -- removes "Nothing" from list, converts "Just x" to "x", i.e. this is what skips the failures
+            $ fmap (buildCompletion node remainingFreqs skip) dict -- builds either Nothing or Just (word, newnode)
 
-        buildCompletion node remainingFreqs word 
-            | wordIsPossible remainingFreqs $ wordAsString word    = Just (word, fix $ newNodeFrom node word remainingFreqs)
+        buildCompletion node remainingFreqs skip word 
+            | Set.member (wordAsString word) skip                  = Nothing
+            | wordIsPossible remainingFreqs $ wordAsString word    = Just (word, fix $ newNodeFrom node word remainingFreqs skip)
             | otherwise                                            = Nothing
         
         -- recursively build a new node starting from a given parent with the specified word; we use 'fix' to get the new node
         -- passed back to us so we can use it in recursive calls:
-        newNodeFrom parent word frequenciesBeforeWord newNode = 
+        newNodeFrom parent word frequenciesBeforeWord skip newNode = 
             let 
                 newFrequencies = subtractFrequencies frequenciesBeforeWord (buildFrequencyMap $ wordAsString word) 
             in WordTree 
                 (wtSumLogProb parent + freqToLogProb (wordFreq word))
                 (wtDepth parent + 1)
                 newFrequencies
-                (completionsFrom newNode newFrequencies)
+                (completionsFrom newNode newFrequencies skip)
+                    -- note that we're not updating skip with the new word
+                    -- may be worth experimenting with doing that at some point
 
 -- ---------------------------------------------------------------------------
 --    Function for identifying words that should not be used in the output
@@ -220,3 +223,5 @@ heuristicProbability :: IntMap Int -> Float
 heuristicProbability = IntMap.foldrWithKey accumulateLogProb 0.0 
     where
         accumulateLogProb letter count acc = acc + (letterToLogProb letter) * (fromIntegral count)
+
+--searchForWords :: [WordData] -> IntMap Int -> Set [String] -> Maybe (String, Float)
